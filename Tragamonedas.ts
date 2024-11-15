@@ -1,1 +1,39 @@
-export class Tragamonedas {}
+export class Tragamonedas {
+  private reels: string[] = ["🍒", "🍋", "🍉", "🍇", "🍌"];
+  private combinacionGanadora: string[];
+
+  constructor() {
+    this.combinacionGanadora = ["🍒", "🍒", "🍒"];
+  }
+
+  jugar(): void {
+    console.log("¡Jugando al tragamonedas!");
+  }
+
+  private getRandom(): number {
+    return Math.floor(Math.random() * this.reels.length);
+  }
+
+  realizarApuesta(monto: number): void {
+    if (monto) {
+      let resultado = [
+        this.reels[this.getRandom()],
+        this.reels[this.getRandom()],
+        this.reels[this.getRandom()],
+      ];
+      console.log("Resultado:", resultado);
+      this.calcularResultado(resultado, monto);
+    }
+  }
+
+  calcularResultado(resultado: string[], monto: number): void {
+    if (
+      JSON.stringify(resultado) === JSON.stringify(this.combinacionGanadora)
+    ) {
+      let premio = monto * 10;
+      console.log(`Ganaste ${premio}`);
+    } else {
+      console.log(`Perdiste ${monto}`);
+    }
+  }
+}
