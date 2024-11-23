@@ -1,3 +1,5 @@
+import * as rsl from "readline-sync";
+
 export class Tragamonedas {
   private reels: string[] = ["🍒", "🍋", "🍉", "🍇", "🍌"];
   private combinacionGanadora: string[];
@@ -22,11 +24,14 @@ export class Tragamonedas {
         this.reels[this.getRandom()],
       ];
       console.log("Resultado:", resultado);
-      this.calcularResultado(resultado, monto);
+      this.resultado(resultado, monto);
     }
+    let teclaParaAvanzar: string = rsl.question(
+      " Presione ENTER para retornar al MENU PRINCIPAL "
+    );
   }
 
-  calcularResultado(resultado: string[], monto: number): void {
+  resultado(resultado: string[], monto: number): void {
     if (
       JSON.stringify(resultado) === JSON.stringify(this.combinacionGanadora)
     ) {
