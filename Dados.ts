@@ -1,45 +1,62 @@
 import   * as rsl from "readline-sync"
+import { JuegoCasino } from "./JuegoCasino";
+import { Jugador } from "./Jugador";
 
-export class Craps {
+export class Dados extends JuegoCasino{
 
-  private saldo: number ;
+  private dado1: number ;
+  private dado2: number;
   private apuesta: number;
 
-  constructor (saldo:number, apuesta:number){
-      this.saldo=saldo;
+  constructor (nombre: string, apuestaMin: number, miniInstruccion: string, dado1:number, dado2:number, apuesta:number){
+    super(nombre, apuestaMin , miniInstruccion);
+      this.dado1=dado1;
+      this.dado2=dado2;
       this.apuesta=apuesta;
   }
 
-  public getsaldo() : number {
-    return this.saldo;
+  public getdado1() : number {
+    return this.dado1;
   }
 
-  public setsaldo(saldo : number) {
-    this.saldo = saldo;
+  public setdado1(dado1 : number) {
+    this.dado1 = dado1;
   }
 
+  public getdado2() : number {
+    return this.dado2;
+  }
+
+  public setdado2(dado2 : number) {
+    this.dado2 = dado2;
+  }
+ 
   public getapuesta() : number {
     return this.apuesta;
   }
-
+  
   public setapuesta(apuesta : number) {
     this.apuesta = apuesta;
   }
+  
 
   public arrojarDados(): number {
-    let dado1: number = Math.floor(Math.random() * 6) + 1;
-    console.log("Primer DADO sale ", dado1);
-    let dado2: number = Math.floor(Math.random() * 6) + 1;
-    console.log("Segundo DADO sale ", dado2);
-    let resultado: number;
-    resultado = dado1 + dado2;
+    this.setdado1( Math.floor(Math.random() * 6) + 1);
+    console.log("Primer DADO sale ", this.getdado1());
+    this.setdado2( Math.floor(Math.random() * 6) + 1);
+    console.log("Segundo DADO sale ", this.getdado2());
+    let resultado :number = this.getdado1() + this.getdado2();
     return resultado;
   }
+
+  Resultado(){
+
+  }
+
 
   public comenzarjugo(apuesta: number): number {
     let resultado1: number;
     resultado1= this.arrojarDados();
-
     if (resultado1 == 7 || resultado1 == 11) {
       console.log("El resultado es: ", resultado1);
       apuesta = apuesta * 1.5; // para ajustar
@@ -74,23 +91,28 @@ export class Craps {
     return apuesta;
   }
 
-  public validarApuesta(){
-
+  public validarApuesta(saldo:number){
     let eleccionApuesta :number = parseInt(rsl.question("Cuanto desea apostar?? : "),10);
-    while (eleccionApuesta < 5  || eleccionApuesta > this.getsaldo()   ){ // mayor a saldo y mayor que apuesta minima 5
+    while (eleccionApuesta < this.apuestaMin  || eleccionApuesta > saldo   ){ // mayor a saldo y mayor que apuesta minima 5
       console.log("Ingrese nuevamente la puesta debe ser menor al saldo y mayor a 5 (apuesta Minima)");
       eleccionApuesta  = parseInt(rsl.question("Cuanto desea apostar?? : "), 10);
     }
     this.setapuesta(eleccionApuesta);
   }
+ //**************** Comienzo juego   ***************** */
+  jugar (jugador:Jugador){
+    console.log("Saldo inicial: ", jugador.getfichas());
+    this.apuestaMin =10;
+    this.validarApuesta(jugador.getfichas());//Pasamos Saldo por parametro
+    let ganancia: number = this.comenzarjugo(jugador.getfichas());
+    let nuevoSaldo= jugador.getfichas() - this.getapuesta() + ganancia;
+    jugador.setfichas(nuevoSaldo);
+    console.log("Saldo final: ", jugador.getfichas());
+    this.resultado();
+  }
 
-  jugarCraps (){
-    console.log("Saldo inicial: ", this.getsaldo());
-    this.validarApuesta();
-    let ganancia: number = this.comenzarjugo(this.getapuesta());
-    let nuevoSaldo= this.getsaldo() - this.getapuesta() + ganancia;
-    this.setsaldo(nuevoSaldo);
-    console.log("Saldo final: ", this.getsaldo());
+  resultado(): void {
     let teclaParaAbanzar :string = rsl.question(" Presione ENTER para retornar al MENU PRINCIPAL ");
   }
+
 }

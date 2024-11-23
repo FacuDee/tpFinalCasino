@@ -1,34 +1,61 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Craps = void 0;
+exports.Dados = void 0;
 var rsl = require("readline-sync");
-var Craps = /** @class */ (function () {
-    function Craps(saldo, apuesta) {
-        this.saldo = saldo;
-        this.apuesta = apuesta;
+var JuegoCasino_1 = require("./JuegoCasino");
+var Dados = /** @class */ (function (_super) {
+    __extends(Dados, _super);
+    function Dados(nombre, apuestaMin, miniInstruccion, dado1, dado2, apuesta) {
+        var _this = _super.call(this, nombre, apuestaMin, miniInstruccion) || this;
+        _this.dado1 = dado1;
+        _this.dado2 = dado2;
+        _this.apuesta = apuesta;
+        return _this;
     }
-    Craps.prototype.getsaldo = function () {
-        return this.saldo;
+    Dados.prototype.getdado1 = function () {
+        return this.dado1;
     };
-    Craps.prototype.setsaldo = function (saldo) {
-        this.saldo = saldo;
+    Dados.prototype.setdado1 = function (dado1) {
+        this.dado1 = dado1;
     };
-    Craps.prototype.getapuesta = function () {
+    Dados.prototype.getdado2 = function () {
+        return this.dado2;
+    };
+    Dados.prototype.setdado2 = function (dado2) {
+        this.dado2 = dado2;
+    };
+    Dados.prototype.getapuesta = function () {
         return this.apuesta;
     };
-    Craps.prototype.setapuesta = function (apuesta) {
+    Dados.prototype.setapuesta = function (apuesta) {
         this.apuesta = apuesta;
     };
-    Craps.prototype.arrojarDados = function () {
-        var dado1 = Math.floor(Math.random() * 6) + 1;
-        console.log("Primer DADO sale ", dado1);
-        var dado2 = Math.floor(Math.random() * 6) + 1;
-        console.log("Segundo DADO sale ", dado2);
-        var resultado;
-        resultado = dado1 + dado2;
+    Dados.prototype.arrojarDados = function () {
+        this.setdado1(Math.floor(Math.random() * 6) + 1);
+        console.log("Primer DADO sale ", this.getdado1());
+        this.setdado2(Math.floor(Math.random() * 6) + 1);
+        console.log("Segundo DADO sale ", this.getdado2());
+        var resultado = this.getdado1() + this.getdado2();
         return resultado;
     };
-    Craps.prototype.comenzarjugo = function (apuesta) {
+    Dados.prototype.Resultado = function () {
+    };
+    Dados.prototype.comenzarjugo = function (apuesta) {
         var resultado1;
         resultado1 = this.arrojarDados();
         if (resultado1 == 7 || resultado1 == 11) {
@@ -66,23 +93,28 @@ var Craps = /** @class */ (function () {
         }
         return apuesta;
     };
-    Craps.prototype.validarApuesta = function () {
+    Dados.prototype.validarApuesta = function (saldo) {
         var eleccionApuesta = parseInt(rsl.question("Cuanto desea apostar?? : "), 10);
-        while (eleccionApuesta < 5 || eleccionApuesta > this.getsaldo()) { // mayor a saldo y mayor que apuesta minima 5
+        while (eleccionApuesta < this.apuestaMin || eleccionApuesta > saldo) { // mayor a saldo y mayor que apuesta minima 5
             console.log("Ingrese nuevamente la puesta debe ser menor al saldo y mayor a 5 (apuesta Minima)");
             eleccionApuesta = parseInt(rsl.question("Cuanto desea apostar?? : "), 10);
         }
         this.setapuesta(eleccionApuesta);
     };
-    Craps.prototype.jugarCraps = function () {
-        console.log("Saldo inicial: ", this.getsaldo());
-        this.validarApuesta();
-        var ganancia = this.comenzarjugo(this.getapuesta());
-        var nuevoSaldo = this.getsaldo() - this.getapuesta() + ganancia;
-        this.setsaldo(nuevoSaldo);
-        console.log("Saldo final: ", this.getsaldo());
+    //**************** Comienzo juego   ***************** */
+    Dados.prototype.jugar = function (jugador) {
+        console.log("Saldo inicial: ", jugador.getfichas());
+        this.apuestaMin = 10;
+        this.validarApuesta(jugador.getfichas()); //Pasamos Saldo por parametro
+        var ganancia = this.comenzarjugo(jugador.getfichas());
+        var nuevoSaldo = jugador.getfichas() - this.getapuesta() + ganancia;
+        jugador.setfichas(nuevoSaldo);
+        console.log("Saldo final: ", jugador.getfichas());
+        this.resultado();
+    };
+    Dados.prototype.resultado = function () {
         var teclaParaAbanzar = rsl.question(" Presione ENTER para retornar al MENU PRINCIPAL ");
     };
-    return Craps;
-}());
-exports.Craps = Craps;
+    return Dados;
+}(JuegoCasino_1.JuegoCasino));
+exports.Dados = Dados;
