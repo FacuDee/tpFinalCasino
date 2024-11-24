@@ -30,24 +30,36 @@ var Casino = /** @class */ (function () {
         console.log("");
         console.log("------ Bienvenido al Alta Del Casino ---------");
         var nombre = rsl.question("Ingrese Nombre :");
-        var fichas = rsl.question("Ingrese Monto en Fichas :");
+        while (!nombre) {
+            console.log("El nombre no puede estar vacío.");
+            nombre = rsl.question("Ingrese Nombre: ");
+        }
+        var fichas = rsl.questionInt("Ingrese Monto en Fichas, Mayor a 10 :");
+        while (fichas < 10) {
+            console.log("Monto inválido. Debe ser un número mayor a 10 fichas.");
+            fichas = parseInt(rsl.question("Ingrese Monto en Fichas: "));
+        }
         var nuevoJugador = new Jugador_1.Jugador(nombre, fichas);
         this.arrJugadores.push(nuevoJugador);
+        console.log("Jugador ".concat(nombre, " registrado con ").concat(fichas, " fichas."));
         return nuevoJugador;
     };
     Casino.prototype.seleccionJugador = function () {
-        console.log(" Secciones Nombre del jugador ");
+        console.log(" Los Jugadores disponibles son: ");
         console.log(this.arrJugadores);
-        var nombreUsuario = rsl.question("Ingrese Nombre de Usuario o enter para cargar usuario nuevo :");
-        var jugadorFiltrado = this.getArrJugadores().filter(function (c) { return c.getnombre() === nombreUsuario; });
+        var nombreUsuario = rsl.question("Ingrese Nombre de Jugador o enter para cargar un Jugador nuevo :");
+        var jugadorFiltrado = this.getArrJugadores().filter(function (c) { return c.getnombre() == nombreUsuario; });
         //filter devuelve elementos que cumplen la condicion
         var jugador = jugadorFiltrado.length > 0 ? jugadorFiltrado[0] : undefined;
         if (!jugador) {
             console.log(" Jugador no encontrado. se dara alta uno Nuevo");
             var jugador_1 = this.nuevoJugador();
+            var teclaParaAvanzar = rsl.question(" Presione ENTER para retornar al MENU PRINCIPAL ");
             return jugador_1;
         }
         else {
+            console.log("Jugador encontrado: ".concat(jugadorFiltrado[0].getnombre()));
+            var teclaParaAvanzar = rsl.question(" Presione ENTER para retornar al MENU PRINCIPAL ");
             return jugador;
         }
     };
@@ -116,7 +128,15 @@ var Casino = /** @class */ (function () {
             }
             // Al finalizar el juego se muestra el menu para poder jugar otro juego.
             this.mostrarMenu();
-            seleccion = this.validarEleccion(); //Se llama a la eleccion de juego y validacion
+            console.log(jugadorSeleccionado.getnombre(), " su Saldo es: ", jugadorSeleccionado.getfichas());
+            if (jugadorSeleccionado.getfichas() > 0) {
+                seleccion = this.validarEleccion(); //Se llama a la eleccion de juego y validacion
+            }
+            else {
+                console.log("El saldo no es Suficiente para Continuar Jugando ");
+                console.log("Gracias Por su vicita Lo esperamos Pronto. ('=') ");
+                seleccion = 0;
+            }
         }
     };
     return Casino;

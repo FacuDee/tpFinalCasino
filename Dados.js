@@ -60,7 +60,7 @@ var Dados = /** @class */ (function (_super) {
         resultado1 = this.arrojarDados();
         if (resultado1 == 7 || resultado1 == 11) {
             console.log("El resultado es: ", resultado1);
-            apuesta = apuesta * 1.5; // para ajustar
+            apuesta = Math.floor(apuesta * 1.5); // para ajustar
             console.log("Felicitaciones, Natural, Ha Ganado en el Primer tiro ", apuesta, " $");
             console.log("Duplicas la Apuesta ");
         }
@@ -78,7 +78,7 @@ var Dados = /** @class */ (function (_super) {
                 var teclaParaAbanzar = rsl.question(" Presione ENTER para Continuar ");
                 resultado2 = this.arrojarDados();
                 if (resultado1 == resultado2) {
-                    apuesta = apuesta * 1.2;
+                    apuesta = Math.floor(apuesta * 1.2);
                     console.log("HA GANADO :", apuesta, " ya que el primer tiro :", resultado1, " es igual al nuevo tiro :", resultado2, " es POINT ");
                 }
                 else if (resultado2 != 7) {
@@ -94,7 +94,7 @@ var Dados = /** @class */ (function (_super) {
         return apuesta;
     };
     Dados.prototype.validarApuesta = function (saldo) {
-        var eleccionApuesta = parseInt(rsl.question("Cuanto desea apostar?? : "), 10);
+        var eleccionApuesta = parseInt(rsl.questionInt("Cuanto desea apostar?? : "), 10);
         while (eleccionApuesta < this.apuestaMin || eleccionApuesta > saldo) { // mayor a saldo y mayor que apuesta minima 5
             console.log("Ingrese nuevamente la puesta debe ser menor al saldo y mayor a 5 (apuesta Minima)");
             eleccionApuesta = parseInt(rsl.question("Cuanto desea apostar?? : "), 10);
@@ -104,7 +104,6 @@ var Dados = /** @class */ (function (_super) {
     //**************** Comienzo juego   ***************** */
     Dados.prototype.jugar = function (jugador) {
         console.log("Saldo inicial: ", jugador.getfichas());
-        this.apuestaMin = 10;
         this.validarApuesta(jugador.getfichas()); //Pasamos Saldo por parametro
         var ganancia = this.comenzarjugo(jugador.getfichas());
         var nuevoSaldo = jugador.getfichas() - this.getapuesta() + ganancia;
