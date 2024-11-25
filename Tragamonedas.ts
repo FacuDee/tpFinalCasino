@@ -1,8 +1,8 @@
 import * as rsl from "readline-sync";
 
 export class Tragamonedas {
-  private reels: string[] = ["🍒", "🍋", "🍉", "🍇", "🍌"];
-  private combinacionGanadora: string[];
+  reels: string[] = ["🍒", "🍋", "🍉", "🍇", "🍌"];
+  combinacionGanadora: string[];
 
   constructor() {
     this.combinacionGanadora = ["🍒", "🍒", "🍒"];
@@ -12,7 +12,7 @@ export class Tragamonedas {
     console.log("¡Jugando al tragamonedas!");
   }
 
-  private getRandom(): number {
+  getRandom(): number {
     return Math.floor(Math.random() * this.reels.length);
   }
 
@@ -31,7 +31,7 @@ export class Tragamonedas {
     );
   }
 
-  resultado(resultado: string[], monto: number): void {
+  resultado(resultado: string[][] | string[], monto: number): void {
     if (
       JSON.stringify(resultado) === JSON.stringify(this.combinacionGanadora)
     ) {
