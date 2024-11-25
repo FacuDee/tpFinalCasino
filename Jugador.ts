@@ -7,7 +7,7 @@ export class Jugador {
     this.fichas = fichas;
   }
 
-  Apostar(cantidad: number): void {
+  apostar(cantidad: number): void {
     if (cantidad <= 0) {
       console.log(`${this.nombre} debe apostar una cantidad positiva.`);
       return;
@@ -22,7 +22,7 @@ export class Jugador {
     }
   }
 
-  GanarApuesta(cantidad: number): void {
+  ganarApuesta(cantidad: number): void {
     this.fichas += cantidad;
     console.log(`${this.nombre} ha ganado ${cantidad} fichas.`);
   }

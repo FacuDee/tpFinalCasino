@@ -6,16 +6,22 @@ import { Dados } from "./Dados";
 import { BlackJack } from "./blackJack";
 import { Ruleta } from "./Ruleta";
 import { TragamonedasPlus } from "./TragamonedasPlus";
+import { TragamonedasClasico } from "./TragamonedasClasico";
 
-const arrJugadores: Jugador[] = [
-  new Jugador("Facundo", 400),
-  new Jugador("Lucas", 400),
-  new Jugador("Mayra", 400),
-  new Jugador("Melisa", 400),
-  new Jugador("Maia", 400),
+// const arrJugadores: Jugador[] = [
+//   new Jugador("Facundo", 400),
+//   new Jugador("Lucas", 400),
+//   new Jugador("Mayra", 400),
+//   new Jugador("Melisa", 400),
+//   new Jugador("Maia", 400),
+// ];
+
+const jugador1 = new Jugador("Facundo", 100);
+
+const arrJuegos: Tragamonedas[] = [
+  new TragamonedasClasico(),
+  new TragamonedasPlus(),
 ];
-
-const arrJuegos: JuegoCasino[] = [];
 
 // // Pruebas e implementación de las clases
 
@@ -125,9 +131,10 @@ function jugar() {
   while (seleccion != 0) {
     if (seleccion == 1) {
       arrJuegos[0].jugar();
-      arrJuegos[0].resultado();
+      arrJuegos[0].resultado([], 0);
     } else if (seleccion == 2) {
-      console.log(" jugarTragamonedas6T() ");
+      arrJuegos[1].jugar();
+      arrJuegos[1].resultado([], 0);
     } else if (seleccion == 3) {
       arrJuegos[2].jugar();
     } else if (seleccion == 4) {
