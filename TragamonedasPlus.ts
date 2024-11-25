@@ -1,79 +1,74 @@
 import { Tragamonedas } from "./Tragamonedas";
 import * as rsl from "readline-sync";
+import { Jugador } from "./Jugador";
 
 export class TragamonedasPlus extends Tragamonedas {
-  apuestaMinima = 20;
   constructor() {
-    super();
-    this.apuestaMinima = this.apuestaMinima;
+    super(
+      "Tragamonedas Plus",
+      20,
+      "Consigue tres 🍒 en cualquiera de las dos filas para ganar."
+    );
   }
 
-  jugar(): void {
+  jugar(jugador: Jugador): void {
     console.log("¡Bienvenido al Tragamonedas Plus!");
     let apuesta: number;
 
     while (true) {
-      apuesta = parseInt(rsl.question("Ingrese su apuesta: "));
+      apuesta = parseInt(rsl.question("Ingrese su apuesta: "), 10);
 
-      if (!isNaN(apuesta) && apuesta >= this.apuestaMinima) {
-        break; // Salir del bucle si la apuesta es válida
+      if (!isNaN(apuesta) && apuesta >= this.getapuestaMin()) {
+        break;
       }
 
       console.log(
-        `La apuesta mínima es ${this.apuestaMinima}. Intente nuevamente.`
+        `La apuesta mínima es ${this.getapuestaMin()}. Intente nuevamente.`
       );
     }
 
-    // Realiza la apuesta y sigue con el juego
-    this.realizarApuesta(apuesta);
+    this.realizarApuesta(jugador, apuesta);
     rsl.question("Presione ENTER para retornar al MENU PRINCIPAL.");
   }
 
-  realizarApuesta(monto: number): void {
-    if (monto) {
-      let resultado1 = [
-        this.reels[this.getRandom()],
-        this.reels[this.getRandom()],
-        this.reels[this.getRandom()],
-      ];
-      let resultado2 = [
-        this.reels[this.getRandom()],
-        this.reels[this.getRandom()],
-        this.reels[this.getRandom()],
-      ];
-      console.log("Resultado 1:", resultado1);
-      console.log("Resultado 2:", resultado2);
-      this.resultado([resultado1, resultado2], monto);
+  realizarApuesta(jugador: Jugador, monto: number): void {
+    if (jugador.getfichas() < monto) {
+      console.log(
+        `${jugador.getnombre()} no tiene suficientes fichas para apostar.`
+      );
+      return;
     }
+
+    jugador.apostar(monto);
+
+    const resultado1 = [
+      this.reels[this.getRandom()],
+      this.reels[this.getRandom()],
+      this.reels[this.getRandom()],
+    ];
+    const resultado2 = [
+      this.reels[this.getRandom()],
+      this.reels[this.getRandom()],
+      this.reels[this.getRandom()],
+    ];
+
+    console.log("Resultado 1:", resultado1);
+    console.log("Resultado 2:", resultado2);
+
+    this.resultado(jugador, [resultado1, resultado2], monto);
   }
 
-  resultado(resultado: string[] | string[][], monto: number): void {
-    if (Array.isArray(resultado[0])) {
-      // Caso para TragamonedasPlus
-      const resultados = resultado as string[][];
-      const esGanador = resultados.some(
-        (res) =>
-          JSON.stringify(res) === JSON.stringify(this.combinacionGanadora)
-      );
+  resultado(jugador: Jugador, resultado: string[][], monto: number): void {
+    const esGanador = resultado.some(
+      (res) => JSON.stringify(res) === JSON.stringify(this.combinacionGanadora)
+    );
 
-      if (esGanador) {
-        let premio = monto * 15;
-        console.log(`¡Ganaste ${premio} fichas`);
-      } else {
-        console.log(`Perdiste ${monto} fichas.`);
-      }
+    if (esGanador) {
+      const premio = monto * 15;
+      jugador.ganarApuesta(premio);
+      console.log(`¡${jugador.getnombre()} ganó ${premio} fichas!`);
     } else {
-      // Caso para Tragamonedas y TragamonedasClasico
-      const resultadoSimple = resultado as string[];
-      if (
-        JSON.stringify(resultadoSimple) ===
-        JSON.stringify(this.combinacionGanadora)
-      ) {
-        let premio = monto * 10;
-        console.log(`¡Ganaste ${premio} fichas!`);
-      } else {
-        console.log(`Perdiste ${monto} fichas.`);
-      }
+      console.log(`${jugador.getnombre()} perdió ${monto} fichas.`);
     }
   }
 }

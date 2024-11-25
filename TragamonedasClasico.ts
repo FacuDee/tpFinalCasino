@@ -1,42 +1,29 @@
 import { Tragamonedas } from "./Tragamonedas";
 import * as rsl from "readline-sync";
+import { Jugador } from "./Jugador";
 
 export class TragamonedasClasico extends Tragamonedas {
-  apuestaMinima = 10;
   constructor() {
-    super();
-    this.apuestaMinima = this.apuestaMinima;
+    super("Tragamonedas Clásico", 10, "Consigue tres 🍒 seguidas para ganar.");
   }
 
-  jugar(): void {
+  jugar(jugador: Jugador): void {
     console.log("¡Bienvenido al Tragamonedas Clásico!");
     let apuesta: number;
 
     while (true) {
-      apuesta = parseInt(rsl.question("Ingrese su apuesta: "));
+      apuesta = parseInt(rsl.question("Ingrese su apuesta: "), 10);
 
-      if (!isNaN(apuesta) && apuesta >= this.apuestaMinima) {
-        break; // Salir del bucle si la apuesta es válida
+      if (!isNaN(apuesta) && apuesta >= this.getapuestaMin()) {
+        break;
       }
 
       console.log(
-        `La apuesta mínima es ${this.apuestaMinima}. Intente nuevamente.`
+        `La apuesta mínima es ${this.getapuestaMin()}. Intente nuevamente.`
       );
     }
 
-    // Realiza la apuesta y sigue con el juego
-    this.realizarApuesta(apuesta);
+    this.realizarApuesta(jugador, apuesta);
     rsl.question("Presione ENTER para retornar al MENU PRINCIPAL.");
-  }
-
-  resultado(resultado: string[], monto: number): void {
-    if (
-      JSON.stringify(resultado) === JSON.stringify(this.combinacionGanadora)
-    ) {
-      let premio = monto * 5; // Factor de multiplicación menor
-      console.log(`Ganaste ${premio} fichas.`);
-    } else {
-      console.log(`Perdiste ${monto} fichas.`);
-    }
   }
 }
