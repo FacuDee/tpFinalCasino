@@ -10,12 +10,23 @@ export class TragamonedasClasico extends Tragamonedas {
 
   jugar(): void {
     console.log("¡Bienvenido al Tragamonedas Clásico!");
-    let apuesta = parseInt(rsl.question("Ingrese su apuesta: "), 10);
-    if (isNaN(apuesta) || apuesta < this.apuestaMinima) {
-      console.log(`La apuesta mínima es ${this.apuestaMinima}`);
-      return;
+    let apuesta: number;
+
+    while (true) {
+      apuesta = parseInt(rsl.question("Ingrese su apuesta: "));
+
+      if (!isNaN(apuesta) && apuesta >= this.apuestaMinima) {
+        break; // Salir del bucle si la apuesta es válida
+      }
+
+      console.log(
+        `La apuesta mínima es ${this.apuestaMinima}. Intente nuevamente.`
+      );
     }
+
+    // Realiza la apuesta y sigue con el juego
     this.realizarApuesta(apuesta);
+    rsl.question("Presione ENTER para retornar al MENU PRINCIPAL.");
   }
 
   resultado(resultado: string[], monto: number): void {

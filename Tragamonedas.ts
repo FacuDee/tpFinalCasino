@@ -26,9 +26,6 @@ export class Tragamonedas {
       console.log("Resultado:", resultado);
       this.resultado(resultado, monto);
     }
-    let teclaParaAvanzar: string = rsl.question(
-      " Presione ENTER para retornar al MENU PRINCIPAL "
-    );
   }
 
   resultado(resultado: string[][] | string[], monto: number): void {
